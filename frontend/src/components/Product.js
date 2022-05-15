@@ -10,7 +10,7 @@ const Product = ({ product }) => {
         <Card.Img src={product.image} variant="top" />
       </Link>
 
-      <Card.Body as="text">
+      <Card.Body>
         <Link
           to={`/product/${product._id}`}
           className="text-center text-decoration-none"
