@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import axios from "axios";
 
-const HomeScreen = () => {
+const HomeScreen = ({ handleClick }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const HomeScreen = () => {
       <Row>
         {products.map((products) => (
           <Col key={products._id}>
-            <Product product={products} />
+            <Product product={products} handleClick={handleClick} />
           </Col>
         ))}
       </Row>

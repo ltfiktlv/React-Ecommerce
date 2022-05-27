@@ -1,0 +1,11 @@
+.deneme:hover {
+  background-color: #f3969a;
+  border-color: #f3969a;
+  color: white;
+  transition: ease-in-out 0.3s;
+}
+.deneme {
+  margin-top: 0.6rem;
+  width: 8rem;
+  height: 3rem;
+}

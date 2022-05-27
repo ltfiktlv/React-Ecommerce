@@ -12,13 +12,40 @@ const Header = () => {
         collapseOnSelect
       >
         <Container>
-          <Navbar.Brand href="/">Savor Coffee</Navbar.Brand>
+          <Navbar.Brand
+            href="/"
+            style={{ letterSpacing: "0.1rem", fontSize: "1.5rem" }}
+          >
+            Savor Coffee <sup>&reg; </sup>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <LinkContainer to="/cart">
                 <Nav.Link className="me-2">
-                  <i className="fas fa-shopping-cart"></i>Cart
+                  <span>
+                    {" "}
+                    <i className="fas fa-shopping-cart"></i>
+                  </span>
+                  <span>
+                    <strong>
+                      <sup
+                        style={{
+                          color: "#f3969a",
+                          border: "1px solid white",
+                          borderRadius: "0.2rem",
+                          padding: "1px",
+                          paddingRight: "1px",
+                          backgroundColor: "white",
+                          position: "relative",
+                          top: "-15px",
+                        }}
+                      >
+                        0
+                      </sup>
+                    </strong>
+                  </span>
+                  <span className="ms-1">Cart</span>
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/login">
