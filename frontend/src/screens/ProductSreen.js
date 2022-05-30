@@ -14,7 +14,7 @@ import Rating from "../components/Rating";
 import axios from "axios";
 import "./ProductScreen.css";
 
-const ProductSreen = ({ handleClick, cart }) => {
+const ProductSreen = ({ handleClick }) => {
   const productId = useParams();
   const [product, setProduct] = useState([]);
   useEffect(() => {
@@ -23,10 +23,12 @@ const ProductSreen = ({ handleClick, cart }) => {
       setProduct(data);
     };
     dataFetch();
-  }, [productId.id]);
+  }, [productId]);
 
   const [qty, setQty] = useState(0);
+
   // const [cart, setCart] = useState({});
+
   return (
     <>
       <Row className="mt-5 ms-3">
@@ -90,15 +92,21 @@ const ProductSreen = ({ handleClick, cart }) => {
                       <Form>
                         <input
                           type="number"
-                          list="quantity1"
+                          list="quantity"
                           name="quantity"
-                          placeholder="Quantity"
+                          id="quantityInput"
+                          placeholder="1"
+                          min="1"
+                          max={product.countInStock}
+                          onChange={(e) => {
+                            setQty(Number(e.target.value));
+                          }}
                         />
                         <datalist
-                          id="quantity1"
-                          value={qty}
+                          id="quantity"
+                          name="quantity"
                           onChange={(e) => {
-                            setQty(e.target.value);
+                            setQty(Number(e.target.value));
                           }}
                         >
                           {[...Array(product.countInStock).keys()].map((t) => (
@@ -127,8 +135,9 @@ const ProductSreen = ({ handleClick, cart }) => {
                       <Button
                         variant="secondary"
                         type="button"
-                        disabled={product.countInStock === 0}
-                        onClick={handleClick}
+                        onClick={() => {
+                          handleClick(product, qty);
+                        }}
                       >
                         <i className="fas fa-shopping-cart"></i>
                         Add to Cart
@@ -152,7 +161,6 @@ const ProductSreen = ({ handleClick, cart }) => {
           </Card>
         </Col>
       </Row>
-
       <Link to="/">
         <Button variant="secondary my-3 mx-4" type="button">
           Go Back

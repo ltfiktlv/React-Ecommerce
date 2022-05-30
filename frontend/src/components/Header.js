@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-const Header = () => {
+const Header = ({ quantity, handleQty }) => {
+  useEffect(() => {
+    handleQty();
+  });
   return (
     <header>
       <Navbar
@@ -41,7 +44,7 @@ const Header = () => {
                           top: "-15px",
                         }}
                       >
-                        0
+                        {quantity}
                       </sup>
                     </strong>
                   </span>
