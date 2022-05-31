@@ -13,6 +13,7 @@ const produceToken = (id) => {
 };
 //user authentication for backend
 router.post("/login", async (req, res) => {
+  // login auth
   try {
     const { email, password } = req.body;
     await User.findOne({ email }).then((user) => {
@@ -41,7 +42,37 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  //register user
+  const { name, email, password } = req.body;
+  const exist = await User.findOne({ email });
+  if (exist) {
+    res.status(400);
+    throw new Error("You have already registered.");
+  }
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
+
+  if (user) {
+    res.status(201);
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: produceToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Account could not be created.");
+  }
+});
+
 router.route("/profile").get(guard, async (req, res) => {
+  //because it is private page, it is protected with guard
   const user = await User.findById(req.user._id);
   if (user) {
     res.json({

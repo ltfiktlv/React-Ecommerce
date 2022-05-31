@@ -37,7 +37,7 @@ const Cart = ({
           <div>
             <span>{item.price}₺</span>
             <button onClick={() => handleRemove(item._id)}>
-              <i class="fa fa-trash" aria-hidden="true"></i>Remove
+              <i className="fa fa-trash" aria-hidden="true"></i>Remove
             </button>
           </div>
         </div>

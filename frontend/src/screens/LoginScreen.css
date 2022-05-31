@@ -1,0 +1,25 @@
+@media all and (min-width: 480px) {
+  .Login {
+    padding: 60px 0;
+  }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}
+body {
+  font-family: Montserrat, -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.head {
+  font-size: 2rem;
+  font-weight: bolder;
+  letter-spacing: 1.1px;
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+.signup {
+  display: flex;
+  justify-content: center;
+}

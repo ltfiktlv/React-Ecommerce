@@ -51,7 +51,7 @@ const Header = ({ quantity, handleQty }) => {
                   <span className="ms-1">Cart</span>
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/login">
+              <LinkContainer to="/users/login">
                 <Nav.Link>
                   <i className="fas fa-user"></i>Log In / Sign In
                 </Nav.Link>
