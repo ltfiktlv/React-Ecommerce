@@ -1,10 +1,21 @@
-import React, { useEffect } from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 const Header = ({ quantity, handleQty }) => {
   useEffect(() => {
     handleQty();
   });
+  const [name, setName] = useState("");
+  useEffect(() => {
+    const response = JSON.parse(localStorage.getItem("user"));
+    setName(response);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
   return (
     <header>
       <Navbar
@@ -51,11 +62,22 @@ const Header = ({ quantity, handleQty }) => {
                   <span className="ms-1">Cart</span>
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/users/login">
-                <Nav.Link>
-                  <i className="fas fa-user"></i>Log In / Sign In
-                </Nav.Link>
-              </LinkContainer>
+              {name ? (
+                <NavDropdown title={name.name} id="username">
+                  <LinkContainer to="/profile">
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={handleLogout}>
+                    Log out
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/users/login">
+                  <Nav.Link>
+                    <i className="fas fa-user"></i>Log In / Sign Up
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

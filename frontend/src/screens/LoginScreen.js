@@ -1,20 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Card, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./LoginScreen.css";
 
-export default function Login() {
+export default function Login({ location }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  let storeName;
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
-  function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-  }
 
+    const response = await axios.post("/api/users/login", {
+      email,
+      password,
+    });
+
+    const storeData = response.data;
+    storeName = storeData.name;
+    console.log(storeData);
+    if (storeData.name) {
+      localStorage.setItem("user", JSON.stringify(storeData));
+      alert("Login Successful");
+      navigate("/");
+      window.location.reload();
+    } else {
+      alert(storeData.err);
+    }
+  };
+  useEffect(() => {
+    if (storeName) {
+      navigate("/", { replace: true });
+    }
+  }, [storeName, navigate]);
   return (
     <Card
       style={{ width: "27rem", height: "50vh" }}
@@ -57,7 +81,7 @@ export default function Login() {
       <div className="signup">
         <span className="toSign">
           Not a member? &nbsp;
-          <Link to="/users" style={{ textDecoration: "none" }}>
+          <Link to="/users/register" style={{ textDecoration: "none" }}>
             {" "}
             <strong>Sign Up</strong>{" "}
           </Link>

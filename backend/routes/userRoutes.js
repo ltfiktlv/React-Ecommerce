@@ -16,6 +16,7 @@ router.post("/login", async (req, res) => {
   // login auth
   try {
     const { email, password } = req.body;
+
     await User.findOne({ email }).then((user) => {
       //if user exist then compare password
       //password comes from the user
@@ -38,11 +39,11 @@ router.post("/login", async (req, res) => {
       });
     });
   } catch (err) {
-    res.status(400).send(`Invalid email or/and password`);
+    res.status(400).json({ message: `Invalid email or/and password` });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   //register user
   const { name, email, password } = req.body;
   const exist = await User.findOne({ email });
