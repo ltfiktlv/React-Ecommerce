@@ -29,17 +29,18 @@ router.post("/login", async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
+            password: user.password,
             isAdmin: user.isAdmin,
             token: produceToken(user._id),
           });
         } else {
           //status code 401 sends Unauthorized user
-          return res.status(401).json({ messsage: `Invalid password` });
+          res.status(401).json(`Invalid password`);
         }
       });
     });
   } catch (err) {
-    res.status(400).json({ message: `Invalid email or/and password` });
+    res.status(400).json(`Invalid email or/and password`);
   }
 });
 
@@ -48,8 +49,7 @@ router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   const exist = await User.findOne({ email });
   if (exist) {
-    res.status(400);
-    throw new Error("You have already registered.");
+    res.status(400).json("You already have an account.");
   }
   const user = await User.create({
     name,
@@ -67,24 +67,42 @@ router.post("/register", async (req, res) => {
       token: produceToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Account could not be created.");
+    res.status(400).json("Account could not be created.");
   }
 });
 
 router.route("/profile").get(guard, async (req, res) => {
-  //because it is private page, it is protected with guard
+  //because it is private page, it is protected with guard middleware
   const user = await User.findById(req.user._id);
   if (user) {
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      password: user.password,
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(404);
-    throw new Error("User not found.");
+    res.status(404).json("You need to login first.");
   }
 });
+
+router.route("/profile").put(guard, async (req, res) => {
+  //because it is private page, it is protected with guard middleware
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+  }
+  const updateUser = await user.save();
+  res.json({
+    _id: updateUser._id,
+    name: updateUser.name,
+    email: updateUser.email,
+    password: updateUser.password,
+    isAdmin: updateUser.isAdmin,
+    token: produceToken(updateUser._id),
+  });
+});
+
 export default router;

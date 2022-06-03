@@ -1,52 +1,59 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./LoginScreen.css";
 
-export default function Login({ location }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [data, setData] = useState({});
+  const [isStatus, setIsStatus] = useState("");
   const navigate = useNavigate();
-  let storeName;
-
-  function validateForm() {
-    return email.length > 0 && password.length > 0;
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await axios.post("/api/users/login", {
-      email,
-      password,
-    });
-
-    const storeData = response.data;
-    storeName = storeData.name;
-    console.log(storeData);
-    if (storeData.name) {
-      localStorage.setItem("user", JSON.stringify(storeData));
-      alert("Login Successful");
-      navigate("/");
-      window.location.reload();
-    } else {
-      alert(storeData.err);
-    }
+    const response = await axios
+      .post("/api/users/login", {
+        email,
+        password,
+      })
+      .catch((error) => {
+        setError(error.response.data);
+      });
+    setIsStatus(JSON.stringify(response.status));
+    setData(response.data);
   };
   useEffect(() => {
-    if (storeName) {
-      navigate("/", { replace: true });
+    if (data.name) {
+      localStorage.setItem("user", JSON.stringify(data));
+      setTimeout(() => {
+        navigate("/");
+        window.location.reload();
+      }, 2000);
     }
-  }, [storeName, navigate]);
+  });
+
   return (
     <Card
-      style={{ width: "27rem", height: "50vh" }}
+      style={{ width: "27rem", height: "52vh" }}
       className="m-auto mt-5 p-3 rounded"
     >
-      <span className="head">LOG IN</span>
-
-      <Card.Body className="Login">
+      <span className="head mb-3">LOGIN</span>
+      {isStatus === "200" ? (
+        <Alert variant={"success"} style={{ margin: "0" }}>
+          Welcome {data.name}!
+        </Alert>
+      ) : error ? (
+        <Alert variant={"danger"} className="m-0">
+          {error}
+        </Alert>
+      ) : (
+        " "
+      )}
+      <Card.Body className="Login pt-5 pb-0">
         <Form onSubmit={handleSubmit}>
           <Form.Group size="lg" controlId="email">
             <Form.Label>Email</Form.Label>
@@ -54,6 +61,7 @@ export default function Login({ location }) {
               autoFocus
               type="email"
               value={email}
+              required
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
@@ -62,16 +70,12 @@ export default function Login({ location }) {
             <Form.Control
               type="password"
               value={password}
+              required
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
-          <div className="d-grid gap-2">
-            <Button
-              variant="secondary"
-              size="lg"
-              type="submit"
-              disabled={!validateForm()}
-            >
+          <div className="d-grid gap-2 pt-3">
+            <Button variant="secondary" size="lg" type="submit">
               Login
             </Button>
           </div>

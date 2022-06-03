@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -8,40 +8,50 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
-  const [text, setText] = useState("");
+  const [error, setError] = useState("");
+  const [isStatus, setIsStatus] = useState("");
   const navigate = useNavigate();
-  let storeName;
-  let errorMessage;
-  function validateForm() {
-    return email.length > 0 && password.length > 0;
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (password !== verifyPassword) {
-      setText("Password does not match");
+      setError("Password does not match");
     } else {
-      await axios.post("/api/users/register", { name, email, password });
+      const response = await axios
+        .post("/api/users/register", { name, email, password })
+        .catch((error) => {
+          setError(error.response.data);
+        });
+      setIsStatus(JSON.stringify(response.status));
+      setTimeout(() => {
+        navigate("/users/login");
+      }, 4000);
     }
   };
-  useEffect(() => {
-    if (storeName) {
-      navigate("/users/login", { replace: true });
-    }
-  }, [storeName, navigate]);
+
   return (
     <Card
-      style={{ width: "27rem", height: "64vh" }}
+      style={{ width: "27rem", height: "70vh" }}
       className="m-auto mt-5 p-3 rounded"
     >
-      <span className="head">SIGN UP</span>
-      {text ? (
-        <Alert variant={"danger"}>{text}!</Alert>
+      <span className="head mb-2 ">SIGN UP</span>
+      <span style={{ paddingLeft: "2rem", marginBottom: "1.5rem" }}>
+        It's fast and easy.
+      </span>
+      {isStatus === "201" ? (
+        <Alert variant={"success"} style={{ margin: "0" }}>
+          Success! You are redirecting to Login Page...
+        </Alert>
+      ) : error ? (
+        <Alert variant={"danger"} style={{ margin: "0" }}>
+          {error}
+        </Alert>
       ) : (
-        <Alert variant={"danger"}>{text}!</Alert>
+        ""
       )}
-      <Card.Body className="Login">
+
+      <Card.Body className="Login pb-0" style={{ paddingTop: "2rem" }}>
         <Form onSubmit={handleSubmit}>
           <Form.Group size="lg" controlId="name">
             <Form.Label>Name</Form.Label>
@@ -49,15 +59,16 @@ export default function Login() {
               autoFocus
               type="name"
               value={name}
+              required
               onChange={(e) => setName(e.target.value)}
             />
           </Form.Group>
           <Form.Group size="lg" controlId="email" className="mt-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
-              autoFocus
               type="email"
               value={email}
+              required
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
@@ -66,6 +77,7 @@ export default function Login() {
             <Form.Control
               type="password"
               value={password}
+              required
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
@@ -74,16 +86,12 @@ export default function Login() {
             <Form.Control
               type="password"
               value={verifyPassword}
+              required
               onChange={(e) => setVerifyPassword(e.target.value)}
             />
           </Form.Group>
           <div className="d-grid gap-2">
-            <Button
-              variant="secondary"
-              size="lg"
-              type="submit"
-              disabled={!validateForm()}
-            >
+            <Button variant="secondary" size="lg" type="submit">
               Sign Up
             </Button>
           </div>

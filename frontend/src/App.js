@@ -118,7 +118,7 @@ function App() {
           }
         />
         <Route path="/users/login" element={<LoginScreen />} />
-        {/* <Route path="/users/profile" element={<UserProfile />} /> */}
+        <Route path="/users/profile" element={<UserProfile />} />
         <Route path="/users/register" element={<RegisterScreen />} />
       </Routes>
       <Footer />

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 const Header = ({ quantity, handleQty }) => {
   useEffect(() => {
     handleQty();
   });
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState({});
+
   useEffect(() => {
     const response = JSON.parse(localStorage.getItem("user"));
-    setName(response);
+
+    setUserName(response);
   }, []);
 
   const handleLogout = () => {
@@ -26,12 +29,20 @@ const Header = ({ quantity, handleQty }) => {
         collapseOnSelect
       >
         <Container>
-          <Navbar.Brand
-            href="/"
-            style={{ letterSpacing: "0.1rem", fontSize: "1.5rem" }}
-          >
-            Savor Coffee <sup>&reg; </sup>
+          <Navbar.Brand>
+            <Link
+              to="/"
+              style={{
+                letterSpacing: "0.1rem",
+                fontSize: "1.5rem",
+                textDecoration: "none",
+                color: "white",
+              }}
+            >
+              Savor Coffee <sup>&reg; </sup>
+            </Link>
           </Navbar.Brand>
+
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
@@ -62,9 +73,9 @@ const Header = ({ quantity, handleQty }) => {
                   <span className="ms-1">Cart</span>
                 </Nav.Link>
               </LinkContainer>
-              {name ? (
-                <NavDropdown title={name.name} id="username">
-                  <LinkContainer to="/profile">
+              {userName ? (
+                <NavDropdown title={userName.name} id="username">
+                  <LinkContainer to="/users/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
                   <NavDropdown.Item onClick={handleLogout}>
@@ -74,7 +85,7 @@ const Header = ({ quantity, handleQty }) => {
               ) : (
                 <LinkContainer to="/users/login">
                   <Nav.Link>
-                    <i className="fas fa-user"></i>Log In / Sign Up
+                    <i className="fas fa-user"></i>Login / Sign Up
                   </Nav.Link>
                 </LinkContainer>
               )}

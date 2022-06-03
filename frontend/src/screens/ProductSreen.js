@@ -27,8 +27,6 @@ const ProductSreen = ({ handleClick }) => {
 
   const [qty, setQty] = useState(0);
 
-  // const [cart, setCart] = useState({});
-
   return (
     <>
       <Row className="mt-5 ms-3">
