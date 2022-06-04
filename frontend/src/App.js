@@ -9,7 +9,9 @@ import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
 import UserProfile from "./screens/UserProfile";
 import RegisterScreen from "./screens/RegisterScreen";
+
 const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || "[]"; //calling back the data that we stored before.
+
 function App() {
   const [cart, setCart] = useState(cartFromLocalStorage); //this way we don't lose cart items when switching page or refreshing page
   const [price, setPrice] = useState(0);

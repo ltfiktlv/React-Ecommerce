@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
   const user = await User.create({
     name,
     email,
-    password,
+    password: await bcrypt.hash(password, 8), //when user creates an account, this function converts simple password to bcrypt hash password.
   });
 
   if (user) {
@@ -93,6 +93,9 @@ router.route("/profile").put(guard, async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
+    if (req.body.newPassword) {
+      user.password = await bcrypt.hash(req.body.newPassword, 8);
+    }
   }
   const updateUser = await user.save();
   res.json({

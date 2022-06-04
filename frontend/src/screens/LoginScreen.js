@@ -10,6 +10,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [data, setData] = useState({});
   const [isStatus, setIsStatus] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState("false");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -29,6 +30,7 @@ export default function Login() {
   useEffect(() => {
     if (data.name) {
       localStorage.setItem("user", JSON.stringify(data));
+
       setTimeout(() => {
         navigate("/");
         window.location.reload();
@@ -38,22 +40,36 @@ export default function Login() {
 
   return (
     <Card
-      style={{ width: "27rem", height: "52vh" }}
+      style={{ width: "27rem", height: "50vh" }}
       className="m-auto mt-5 p-3 rounded"
     >
       <span className="head mb-3">LOGIN</span>
       {isStatus === "200" ? (
-        <Alert variant={"success"} style={{ margin: "0" }}>
+        <Alert
+          variant={"success"}
+          style={{
+            marginBottom: "0",
+            marginLeft: "1.8rem",
+            width: "22rem",
+          }}
+        >
           Welcome {data.name}!
         </Alert>
       ) : error ? (
-        <Alert variant={"danger"} className="m-0">
+        <Alert
+          variant={"danger"}
+          style={{
+            marginBottom: "0",
+            marginLeft: "1.8rem",
+            width: "22rem",
+          }}
+        >
           {error}
         </Alert>
       ) : (
         " "
       )}
-      <Card.Body className="Login pt-5 pb-0">
+      <Card.Body className="Login pt-4 pb-0">
         <Form onSubmit={handleSubmit}>
           <Form.Group size="lg" controlId="email">
             <Form.Label>Email</Form.Label>

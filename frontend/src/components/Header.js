@@ -56,7 +56,7 @@ const Header = ({ quantity, handleQty }) => {
                     <strong>
                       <sup
                         style={{
-                          color: "#f3969a",
+                          color: "#00352b",
                           border: "1px solid white",
                           borderRadius: "0.2rem",
                           padding: "1px",
@@ -79,7 +79,7 @@ const Header = ({ quantity, handleQty }) => {
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
                   <NavDropdown.Item onClick={handleLogout}>
-                    Log out
+                    Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (

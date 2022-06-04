@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import "./CartScreen.css";
 const Cart = ({
   cart,
@@ -15,44 +15,106 @@ const Cart = ({
   });
 
   return (
-    <article>
-      {cart.length === 0 && <div>Shopping cart is empty.</div>}
+    <Card
+      style={{
+        width: "70%",
+        height: "70vh",
+        margin: "auto",
+        marginTop: "3rem",
+      }}
+    >
+      <Card.Header className="text-center" style={{ fontSize: "1.5rem" }}>
+        MY CART ({quantity} Products){" "}
+      </Card.Header>
+      {cart.length === 0 && (
+        <Card.Body
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Card.Text>
+            <strong>Shopping cart is empty.</strong>
+          </Card.Text>
+        </Card.Body>
+      )}
       {cart.map((item, index) => (
-        <div className="cart_box" key={index}>
-          <Link to={`/product/${item._id}`} style={{ textDecoration: "none" }}>
-            <div className="cart_img">
-              <img src={item.image} alt={item.name} />
-              <p>{item.name}</p>
-            </div>
+        <Card.Body className="cart_box" key={index}>
+          <Link
+            to={`/product/${item._id}`}
+            style={{ textDecoration: "none", width: "15rem", display: "flex" }}
+          >
+            <Card.Img src={item.image} alt={item.name} />
+            <Card.Text
+              style={{
+                fontWeight: "bolder",
+                paddingTop: "0.7rem",
+                marginLeft: "1rem",
+              }}
+            >
+              {item.name}
+            </Card.Text>
           </Link>
-          <div>
-            <button onClick={() => handleChange(item, 1)}>+</button>
-            <button>
+          <Card.Body
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "0.8rem",
+            }}
+          >
+            <Button onClick={() => handleChange(item, 1)}>+</Button>
+            <Button>
               {item.defaultCartStock >= item.countInStock
                 ? item.countInStock
                 : item.defaultCartStock}
-            </button>
-            <button onClick={() => handleChange(item, -1)}>-</button>
-          </div>
-          <div>
-            <span>{item.price}₺</span>
-            <button onClick={() => handleRemove(item._id)}>
+            </Button>
+            <Button onClick={() => handleChange(item, -1)}>-</Button>
+          </Card.Body>
+          <Card.Body
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Card.Text style={{ marginTop: "1rem", paddingLeft: "5rem" }}>
+              <strong>
+                {(item.price * item.defaultCartStock).toFixed(2)}₺
+              </strong>
+            </Card.Text>
+            <Button
+              onClick={() => handleRemove(item._id)}
+              style={{ marginBottom: "0.8rem" }}
+            >
               <i className="fa fa-trash" aria-hidden="true"></i>Remove
-            </button>
-          </div>
-        </div>
+            </Button>
+          </Card.Body>
+        </Card.Body>
       ))}
-      <div className="total">
-        <span>
-          Total({quantity} Items): {price}₺
-        </span>
+      <Card.Footer className="total">
+        <span>Total Price : {price}₺</span>
+      </Card.Footer>
+      <div
+        style={{
+          textDecoration: "none",
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "1.5rem 1rem",
+        }}
+      >
+        <Link to="/">
+          <Button variant="secondary " type="button">
+            Continue to Shopping
+          </Button>
+        </Link>
+        <Link to="/order">
+          <button id="orderbtn" disabled={quantity === 0}>
+            Order
+          </button>
+        </Link>
       </div>
-      <Link to="/">
-        <Button variant="secondary my-3 mx-4" type="button">
-          Continue to Shopping
-        </Button>
-      </Link>
-    </article>
+    </Card>
   );
 };
 

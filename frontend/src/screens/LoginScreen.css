@@ -11,7 +11,12 @@
 body {
   font-family: Montserrat, -apple-system, system-ui, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-image: url("file:///C:/Users/Lutfi/Downloads/28482061.jpg");
+  background-attachment: fixed;
+  background-position: center center;
+  background-size: 109vh;
 }
+
 .head {
   font-size: 2rem;
   font-weight: bolder;

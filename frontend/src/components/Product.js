@@ -31,6 +31,7 @@ const Product = ({ product, handleClick }) => {
           <Col>
             <Button
               as="button"
+              variant="secondary"
               size="md"
               className="deneme"
               disabled={product.countInStock === 0}

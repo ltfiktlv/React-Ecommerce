@@ -7,6 +7,7 @@ export default function UserProfile() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [text, setText] = useState("");
   const [success, setSuccess] = useState("");
@@ -15,8 +16,6 @@ export default function UserProfile() {
 
   const [userData, setUserData] = useState(fetchData);
   useEffect(() => {
-    setUserData(fetchData);
-
     let config = {
       headers: {
         authorization: `Bearer ${userData.token}`,
@@ -29,7 +28,8 @@ export default function UserProfile() {
         setEmail(userData.email);
       })
       .catch((error) => setText(error.response.data));
-  }, [localStorage.user]);
+  }, [userData.token, userData.name, userData.email]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -48,7 +48,7 @@ export default function UserProfile() {
       let data = {
         name,
         email,
-        password,
+        newPassword,
       };
       const res = await axios
         .put("/api/users/profile", data, config)
@@ -56,10 +56,12 @@ export default function UserProfile() {
         .catch((error) => setError(error.respond.data));
 
       const newLocal = res.data;
-
+      console.log(res.data);
       localStorage.setItem("user", JSON.stringify(newLocal));
 
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     }
   };
 
@@ -68,6 +70,7 @@ export default function UserProfile() {
       {text ? (
         <span
           style={{
+            color: "black",
             display: "flex",
             justifyContent: "center",
             marginTop: "20rem",
@@ -75,28 +78,50 @@ export default function UserProfile() {
             fontSize: "1.5rem",
           }}
         >
-          {text} (401)
+          {text}
         </span>
       ) : (
         <Card
-          style={{ width: "27rem", height: "70vh" }}
+          style={{ width: "27rem", height: "78vh" }}
           className="m-auto mt-5 p-3 rounded"
         >
           <span className="head mb-2 ">PROFILE</span>
-
-          {error ? (
-            <Alert variant={"danger"} style={{ margin: "0" }}>
-              {error}
-            </Alert>
-          ) : success ? (
-            <Alert variant={"success"} style={{ margin: "0" }}>
+          <span
+            style={{
+              marginLeft: "2rem",
+              paddingBottom: "1rem",
+              fontSize: "0.9rem",
+            }}
+          >
+            Easily update your name, email and password.
+          </span>
+          {success ? (
+            <Alert
+              variant={"success"}
+              style={{
+                marginBottom: "0",
+                marginLeft: "1.8rem",
+                width: "22rem",
+              }}
+            >
               {success}
+            </Alert>
+          ) : error ? (
+            <Alert
+              variant={"danger"}
+              style={{
+                marginBottom: "0",
+                marginLeft: "1.8rem",
+                width: "22rem",
+              }}
+            >
+              {error}
             </Alert>
           ) : (
             ""
           )}
 
-          <Card.Body className="Login pb-0" style={{ paddingTop: "2rem" }}>
+          <Card.Body className="Login pb-0" style={{ paddingTop: "1.5rem" }}>
             <Form onSubmit={handleSubmit}>
               <Form.Group size="lg" controlId="name">
                 <Form.Label>Name</Form.Label>
@@ -117,26 +142,46 @@ export default function UserProfile() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Group>
-              <Form.Group size="lg" controlId="password" className="mt-3">
-                <Form.Label>Password</Form.Label>
+              <Form.Group size="lg" controlId="newPassword" className="mt-3">
+                <Form.Label>New Password</Form.Label>
                 <Form.Control
                   type="password"
-                  value={password}
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={newPassword}
+                  placeholder="You can change your password"
+                  onChange={(e) => setNewPassword(e.target.value)}
                 />
               </Form.Group>
-              <Form.Group size="lg" controlId="verifyPassword" className="mt-3">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={verifyPassword}
-                  required
-                  onChange={(e) => setVerifyPassword(e.target.value)}
-                />
-              </Form.Group>
+              <Card.Footer className="mt-3">
+                <Form.Group size="lg" controlId="password" className="mt-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group
+                  size="lg"
+                  controlId="verifyPassword"
+                  className="mt-3"
+                >
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={verifyPassword}
+                    required
+                    onChange={(e) => setVerifyPassword(e.target.value)}
+                  />
+                </Form.Group>
+              </Card.Footer>
               <div className="d-grid gap-2">
-                <Button variant="secondary" size="lg" type="submit">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  type="submit"
+                  style={{ marginTop: "1.5rem" }}
+                >
                   Update Profile
                 </Button>
               </div>

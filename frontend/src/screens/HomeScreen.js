@@ -17,7 +17,17 @@ const HomeScreen = ({ handleClick }) => {
 
   return (
     <>
-      <h1>Latest Products</h1>
+      <h1
+        style={{
+          color: "black",
+          border: "0px solid black",
+          width: "21rem",
+          backgroundColor: "#f8f1e7",
+          borderRadius: "5px",
+        }}
+      >
+        Latest Products
+      </h1>
       <hr></hr>
       <Row>
         {products.map((products) => (

@@ -40,11 +40,17 @@ export default function Login() {
         It's fast and easy.
       </span>
       {isStatus === "201" ? (
-        <Alert variant={"success"} style={{ margin: "0" }}>
+        <Alert
+          variant={"success"}
+          style={{ marginBottom: "0", marginLeft: "1.8rem", width: "22rem" }}
+        >
           Success! You are redirecting to Login Page...
         </Alert>
       ) : error ? (
-        <Alert variant={"danger"} style={{ margin: "0" }}>
+        <Alert
+          variant={"danger"}
+          style={{ marginBottom: "0", marginLeft: "1.8rem", width: "22rem" }}
+        >
           {error}
         </Alert>
       ) : (
