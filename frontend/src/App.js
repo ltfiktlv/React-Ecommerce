@@ -9,6 +9,7 @@ import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
 import UserProfile from "./screens/UserProfile";
 import RegisterScreen from "./screens/RegisterScreen";
+import OrderScreen from "./screens/OrderScreen";
 
 const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || "[]"; //calling back the data that we stored before.
 
@@ -34,8 +35,6 @@ function App() {
         )
       );
     } else setCart([...cart, { ...products, defaultCartStock: qty || 1 }]);
-
-    console.log(exist.defaultCartStock);
   };
 
   const handleChange = (products, d) => {
@@ -61,7 +60,6 @@ function App() {
     console.log(`in cart stock: ${basket[index].defaultCartStock}`);
   };
   const handleRemove = (id) => {
-    console.log(cart);
     const arr = cart.filter((item) => item._id !== id);
     setCart(arr);
     handlePrice();
@@ -80,7 +78,6 @@ function App() {
         ? (total += Number(item.countInStock))
         : (total += Number(item.defaultCartStock))
     );
-    console.log(Number(total));
 
     setPrice(ans.toFixed(2));
     setSum(total);
@@ -122,6 +119,7 @@ function App() {
         <Route path="/users/login" element={<LoginScreen />} />
         <Route path="/users/profile" element={<UserProfile />} />
         <Route path="/users/register" element={<RegisterScreen />} />
+        <Route path="/order" element={<OrderScreen />} />
       </Routes>
       <Footer />
     </Router>

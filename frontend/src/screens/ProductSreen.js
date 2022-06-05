@@ -160,7 +160,11 @@ const ProductSreen = ({ handleClick }) => {
         </Col>
       </Row>
       <Link to="/">
-        <Button variant="secondary my-3 mx-4" type="button">
+        <Button
+          variant="secondary"
+          style={{ marginLeft: "1.7rem", marginTop: "1rem" }}
+          type="button"
+        >
           Go Back
         </Button>
       </Link>

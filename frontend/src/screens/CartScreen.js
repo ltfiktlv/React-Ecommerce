@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Card } from "react-bootstrap";
+
 import "./CartScreen.css";
 const Cart = ({
   cart,
@@ -13,6 +14,15 @@ const Cart = ({
   useEffect(() => {
     handlePrice();
   });
+  const navigate = useNavigate();
+
+  const isLoggedIn = () => {
+    if (localStorage.getItem("user")) {
+      navigate("/order");
+    } else {
+      navigate(`/users/login?redirect=order`); //it will direct to the login screen
+    }
+  };
 
   return (
     <Card
@@ -108,11 +118,10 @@ const Cart = ({
             Continue to Shopping
           </Button>
         </Link>
-        <Link to="/order">
-          <button id="orderbtn" disabled={quantity === 0}>
-            Order
-          </button>
-        </Link>
+
+        <button id="orderbtn" disabled={quantity === 0} onClick={isLoggedIn}>
+          Order
+        </button>
       </div>
     </Card>
   );

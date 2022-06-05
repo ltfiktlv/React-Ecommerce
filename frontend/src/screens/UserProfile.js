@@ -71,6 +71,8 @@ export default function UserProfile() {
         <span
           style={{
             color: "black",
+            border: "0 solid black",
+            backgroundColor: "#f8f1e7",
             display: "flex",
             justifyContent: "center",
             marginTop: "20rem",

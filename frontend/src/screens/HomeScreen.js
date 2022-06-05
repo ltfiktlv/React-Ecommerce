@@ -13,7 +13,7 @@ const HomeScreen = ({ handleClick }) => {
       setProducts(data);
     };
     fetchProducts();
-  });
+  }, []);
 
   return (
     <>

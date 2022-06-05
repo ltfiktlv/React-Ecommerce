@@ -21,7 +21,7 @@ const Product = ({ product, handleClick }) => {
           </Card.Title>
         </Link>
 
-        <Card.Text>
+        <Card.Text as="div">
           <Rating value={product.rating} text={product.numReviews} />
         </Card.Text>
         <Row>
