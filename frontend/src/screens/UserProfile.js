@@ -34,10 +34,9 @@ export default function UserProfile() {
     event.preventDefault();
 
     const match = await bcrypt.compare(password, userData.password);
-    const hold = match;
-    if (password !== verifyPassword) {
-      setError("Password does not match");
-    } else if (!hold) {
+    if (newPassword !== verifyPassword) {
+      setError("Passwords do not match");
+    } else if (!match) {
       setError("Invalid Password");
     } else {
       let config = {
@@ -153,6 +152,15 @@ export default function UserProfile() {
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
               </Form.Group>
+              <Form.Group size="lg" controlId="verifyPassword" className="mt-3">
+                <Form.Label>Confirm New Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={verifyPassword}
+                  required
+                  onChange={(e) => setVerifyPassword(e.target.value)}
+                />
+              </Form.Group>
               <Card.Footer className="mt-3">
                 <Form.Group size="lg" controlId="password" className="mt-3">
                   <Form.Label>Password</Form.Label>
@@ -160,20 +168,8 @@ export default function UserProfile() {
                     type="password"
                     value={password}
                     required
+                    placeholder="Currently used password"
                     onChange={(e) => setPassword(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group
-                  size="lg"
-                  controlId="verifyPassword"
-                  className="mt-3"
-                >
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={verifyPassword}
-                    required
-                    onChange={(e) => setVerifyPassword(e.target.value)}
                   />
                 </Form.Group>
               </Card.Footer>

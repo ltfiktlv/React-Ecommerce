@@ -9,9 +9,9 @@ import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
 import UserProfile from "./screens/UserProfile";
 import RegisterScreen from "./screens/RegisterScreen";
-import OrderScreen from "./screens/OrderScreen";
-
-const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || "[]"; //calling back the data that we stored before.
+import ShippingAddressScreen from "./screens/ShippingAddressScreen";
+import PaymentScreen from "./screens/PaymentScreen";
+const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || []; //calling back the data that we stored before.
 
 function App() {
   const [cart, setCart] = useState(cartFromLocalStorage); //this way we don't lose cart items when switching page or refreshing page
@@ -21,8 +21,9 @@ function App() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
   const handleClick = (products, qty) => {
-    const exist = cart.find((item) => item._id === products._id);
-
+    if (cart) {
+      var exist = cart.find((item) => item._id === products._id);
+    }
     if (exist) {
       setCart(
         cart.map((item) =>
@@ -67,20 +68,22 @@ function App() {
   const handlePrice = () => {
     let ans = 0;
     let total = 0;
-    cart.map((items) =>
-      items.defaultCartStock >= items.countInStock
-        ? (ans += items.countInStock * items.price)
-        : (ans += items.defaultCartStock * items.price)
-    );
+    if (cart) {
+      cart.map((items) =>
+        items.defaultCartStock >= items.countInStock
+          ? (ans += items.countInStock * items.price)
+          : (ans += items.defaultCartStock * items.price)
+      );
 
-    cart.map((item) =>
-      item.defaultCartStock >= item.countInStock
-        ? (total += Number(item.countInStock))
-        : (total += Number(item.defaultCartStock))
-    );
+      cart.map((item) =>
+        item.defaultCartStock >= item.countInStock
+          ? (total += Number(item.countInStock))
+          : (total += Number(item.defaultCartStock))
+      );
 
-    setPrice(ans.toFixed(2));
-    setSum(total);
+      setPrice(ans.toFixed(2));
+      setSum(total);
+    }
   };
 
   return (
@@ -119,7 +122,11 @@ function App() {
         <Route path="/users/login" element={<LoginScreen />} />
         <Route path="/users/profile" element={<UserProfile />} />
         <Route path="/users/register" element={<RegisterScreen />} />
-        <Route path="/order" element={<OrderScreen />} />
+        <Route path="/address" element={<ShippingAddressScreen />} />
+        <Route
+          path="/payment"
+          element={<PaymentScreen cart={cart} price={price} quantity={sum} />}
+        />
       </Routes>
       <Footer />
     </Router>

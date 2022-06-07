@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { createBrowserHistory } from "history";
+
 import "./LoginScreen.css";
 
 export default function Login() {
@@ -13,7 +13,7 @@ export default function Login() {
   const [isStatus, setIsStatus] = useState("");
 
   const navigate = useNavigate();
-  const history = createBrowserHistory();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -35,7 +35,7 @@ export default function Login() {
 
       setTimeout(() => {
         const redirect = window.location.search
-          ? window.location.search.split("=")[1] //it will /users/login?redirect=order take the first word after = sign.
+          ? window.location.search.split("=")[1] //it will /users/login?redirect=address take the first word after = sign.
           : "";
         navigate(`/${redirect}`);
         window.location.reload();

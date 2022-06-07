@@ -21,13 +21,12 @@ const orderSchema = mongoose.Schema(
           type: Number,
           required: true,
         },
-        qty: {
+        defaultCartStock: {
           type: Number,
           required: true,
         },
         product: {
           type: mongoose.Schema.Types.ObjectId,
-          required: true,
           ref: "Product",
         },
       },
@@ -53,6 +52,10 @@ const orderSchema = mongoose.Schema(
         type: String,
         required: true,
       },
+      contactNumber: {
+        type: "string",
+        required: true,
+      },
     },
     paymentMethod: {
       type: String,
@@ -75,6 +78,11 @@ const orderSchema = mongoose.Schema(
     },
     shippingPrice: {
       type: Number,
+      required: true,
+      default: 0.0,
+    },
+    itemsPrice: {
+      type: String,
       required: true,
       default: 0.0,
     },

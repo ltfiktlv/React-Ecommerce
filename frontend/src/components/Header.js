@@ -16,6 +16,8 @@ const Header = ({ quantity, handleQty }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("shippingAddress");
+    localStorage.removeItem("paymentMethod");
     window.location.reload();
   };
 
