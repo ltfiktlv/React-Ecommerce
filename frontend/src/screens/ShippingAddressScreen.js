@@ -33,7 +33,7 @@ const ShippingAddressScreen = () => {
   useEffect(() => {
     if (shippingAddress) {
       localStorage.setItem("shippingAddress", JSON.stringify(shippingAddress));
-      navigate("/payment");
+      navigate("/overview");
     }
   });
 

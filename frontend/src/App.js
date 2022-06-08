@@ -11,15 +11,18 @@ import UserProfile from "./screens/UserProfile";
 import RegisterScreen from "./screens/RegisterScreen";
 import ShippingAddressScreen from "./screens/ShippingAddressScreen";
 import PaymentScreen from "./screens/PaymentScreen";
+import CheckOutScreen from "./screens/CheckOutScreen";
 const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || []; //calling back the data that we stored before.
 
 function App() {
   const [cart, setCart] = useState(cartFromLocalStorage); //this way we don't lose cart items when switching page or refreshing page
   const [price, setPrice] = useState(0);
   const [sum, setSum] = useState(0);
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+
   const handleClick = (products, qty) => {
     if (cart) {
       var exist = cart.find((item) => item._id === products._id);
@@ -71,8 +74,8 @@ function App() {
     if (cart) {
       cart.map((items) =>
         items.defaultCartStock >= items.countInStock
-          ? (ans += items.countInStock * items.price)
-          : (ans += items.defaultCartStock * items.price)
+          ? (ans += Number(items.countInStock * items.price))
+          : (ans += Number(items.defaultCartStock * items.price))
       );
 
       cart.map((item) =>
@@ -124,9 +127,10 @@ function App() {
         <Route path="/users/register" element={<RegisterScreen />} />
         <Route path="/address" element={<ShippingAddressScreen />} />
         <Route
-          path="/payment"
+          path="/overview"
           element={<PaymentScreen cart={cart} price={price} quantity={sum} />}
         />
+        <Route path="/payment" element={<CheckOutScreen />} />
       </Routes>
       <Footer />
     </Router>

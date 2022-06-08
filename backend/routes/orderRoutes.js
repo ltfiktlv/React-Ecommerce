@@ -27,8 +27,16 @@ router.route("/").post(guard, async (req, res) => {
       totalPrice,
     });
     const orderCreated = await order.save();
-    console.log(order);
     res.status(201).json(orderCreated);
+  }
+});
+
+router.route("/:id").get(guard, async (req, res) => {
+  const order = await Order.findById(req.params._id);
+  if (order) {
+    res.json(order);
+  } else {
+    res.status(404).json("Order doesn't exist.");
   }
 });
 
