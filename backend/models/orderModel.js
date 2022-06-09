@@ -61,21 +61,6 @@ const orderSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    paymentResult: {
-      //When payment is successfull we gonna take data back
-      id: {
-        type: "String",
-      },
-      status: {
-        type: "String",
-      },
-      update_time: {
-        type: "String",
-      },
-      email_address: {
-        type: "String",
-      },
-    },
     shippingPrice: {
       type: Number,
       required: true,

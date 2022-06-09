@@ -12,6 +12,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ShippingAddressScreen from "./screens/ShippingAddressScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import CheckOutScreen from "./screens/CheckOutScreen";
+
 const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || []; //calling back the data that we stored before.
 
 function App() {
@@ -130,7 +131,8 @@ function App() {
           path="/overview"
           element={<PaymentScreen cart={cart} price={price} quantity={sum} />}
         />
-        <Route path="/payment" element={<CheckOutScreen />} />
+
+        <Route path="/orders/:id" element={<CheckOutScreen />} />
       </Routes>
       <Footer />
     </Router>

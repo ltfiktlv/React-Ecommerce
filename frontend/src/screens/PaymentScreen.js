@@ -4,14 +4,12 @@ import {
   Form,
   Button,
   Card,
-  Alert,
   Container,
   ListGroup,
   ListGroupItem,
   FormGroup,
   Row,
   Col,
-  Image,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import StepChecker from "../components/StepChecker";
@@ -21,27 +19,14 @@ const PaymentScreen = ({ cart, price }) => {
   const [paymentMethod, setPaymentMethod] = useState("CreditCard");
   const [isSuccess, setIsSuccess] = useState("");
   const [order, setOrder] = useState("");
+
   const shippingPrice = 5;
   const totalPrice = Number(price) + shippingPrice;
   const shoppingCart = cart;
   const itemsPrice = price;
   const shippingAddress = JSON.parse(localStorage.getItem("shippingAddress"));
+
   const userInfo = JSON.parse(localStorage.getItem("user"));
-
-  const paymentApi = async () => {
-    let config = {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const response = await axios.get(
-      "/api/isbank/v1/product-fees?product_code=0001-99999&criteria_code=criteria_1",
-      config
-    );
-    console.log(response);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -62,8 +47,33 @@ const PaymentScreen = ({ cart, price }) => {
       shippingPrice: shippingPrice,
       totalPrice: totalPrice,
     };
-    await axios.post("/api/orders", data, config);
+    await axios
+      .post("/api/orders", data, config)
+      .then(() => setIsSuccess("success"))
+      .catch((error) => setIsSuccess(error));
   };
+
+  useEffect(() => {
+    if (isSuccess === "success") {
+      let config = {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const fetchOrder = async () => {
+        const { data } = await axios.get("/api/orders", config);
+
+        setOrder(data);
+        const lastOrder = data.length - 1;
+        let navigateAddress = data[lastOrder]._id;
+        navigate(`/orders/${navigateAddress}`);
+      };
+      fetchOrder();
+    } else {
+      console.log(isSuccess);
+    }
+  }, [isSuccess]);
   return (
     <>
       <Container style={{ display: "flex", justifyContent: "center" }}>
@@ -219,6 +229,7 @@ const PaymentScreen = ({ cart, price }) => {
                       </FormGroup>
                     </Col>
                   </Row>
+
                   <Button type="submit" style={{ marginLeft: "7rem" }}>
                     Continue
                   </Button>

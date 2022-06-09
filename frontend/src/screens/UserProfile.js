@@ -11,6 +11,7 @@ export default function UserProfile() {
   const [error, setError] = useState("");
   const [text, setText] = useState("");
   const [success, setSuccess] = useState("");
+  const [orders, setOrders] = useState([]);
 
   const fetchData = JSON.parse(localStorage.getItem("user")) || [];
 
@@ -30,6 +31,20 @@ export default function UserProfile() {
       .catch((error) => setText(error.response.data));
   }, [userData.token, userData.name, userData.email]);
 
+  useEffect(() => {
+    let config = {
+      headers: {
+        authorization: `Bearer ${userData.token}`,
+      },
+    };
+    const fetchData = async () => {
+      const { respond } = await axios.get(`/api/orders/myorders`, config);
+
+      setOrders(respond.data);
+    };
+    fetchData();
+    console.log(orders);
+  }, [orders]);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -84,7 +99,7 @@ export default function UserProfile() {
       ) : (
         <Card
           style={{ width: "27rem", height: "78vh" }}
-          className="m-auto mt-5 p-3 rounded"
+          className=" mt-5 p-3 rounded"
         >
           <span className="head mb-2 ">PROFILE</span>
           <span
@@ -185,6 +200,33 @@ export default function UserProfile() {
               </div>
             </Form>
           </Card.Body>
+          {/* <Card.Body>
+            {" "}
+            <span className="head mb-2 ">PROFILE</span>
+            <Table>
+              <th>
+                <tr>
+                  <th>ID</th>
+                  <th>DATE</th>
+                  <th>TOTAL</th>
+                  <th>PAID</th>
+                  <th>DELIVERED</th>
+                </tr>
+              </th>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>{order.dat}</td>
+                    <td>{order._id}</td>
+                    <td>{order._id}</td>
+                    <td>{order._id}</td>
+                    <td>{order._id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body> */}
         </Card>
       )}
     </>
