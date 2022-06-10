@@ -63,7 +63,12 @@ router.route("/:id").put(guard, async (req, res) => {
 });
 router.route("/myorders").get(guard, async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
+
   res.json(orders);
+});
+router.route("/:id").get(guard, async (req, res) => {
+  const orderDetail = await Order.findById(req.params.id);
+  res.json(orderDetail);
 });
 
 export default router;

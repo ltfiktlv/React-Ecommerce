@@ -120,7 +120,7 @@ const Cart = ({
         >
           <Link to="/">
             <Button variant="secondary " type="button">
-              Continue to Shopping
+              Main Page
             </Button>
           </Link>
 

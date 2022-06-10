@@ -20,3 +20,4 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/orders/:id", orderRoutes);
 app.use("/api/orders/myorders", orderRoutes);
+app.use("/api/myorders/:id", orderRoutes);

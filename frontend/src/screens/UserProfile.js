@@ -1,6 +1,16 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Alert } from "react-bootstrap";
+import {
+  Card,
+  Form,
+  Button,
+  Alert,
+  Table,
+  Row,
+  Col,
+  Container,
+} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import bcrypt from "bcryptjs";
 export default function UserProfile() {
   const [name, setName] = useState("");
@@ -15,6 +25,18 @@ export default function UserProfile() {
 
   const fetchData = JSON.parse(localStorage.getItem("user")) || [];
 
+  const fetchOrders = async () => {
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${userData.token}`,
+      },
+    };
+
+    const respond = await axios.get(`/api/orders/myorders`, config);
+    console.log(respond);
+    setOrders(respond.data);
+  };
   const [userData, setUserData] = useState(fetchData);
   useEffect(() => {
     let config = {
@@ -29,22 +51,10 @@ export default function UserProfile() {
         setEmail(userData.email);
       })
       .catch((error) => setText(error.response.data));
+    fetchOrders();
+    console.log(`this is orders: ${orders}`);
   }, [userData.token, userData.name, userData.email]);
 
-  useEffect(() => {
-    let config = {
-      headers: {
-        authorization: `Bearer ${userData.token}`,
-      },
-    };
-    const fetchData = async () => {
-      const { respond } = await axios.get(`/api/orders/myorders`, config);
-
-      setOrders(respond.data);
-    };
-    fetchData();
-    console.log(orders);
-  }, [orders]);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -98,135 +108,170 @@ export default function UserProfile() {
         </span>
       ) : (
         <Card
-          style={{ width: "27rem", height: "78vh" }}
-          className=" mt-5 p-3 rounded"
+          style={{
+            height: "82vh",
+          }}
         >
-          <span className="head mb-2 ">PROFILE</span>
-          <span
-            style={{
-              marginLeft: "2rem",
-              paddingBottom: "1rem",
-              fontSize: "0.9rem",
-            }}
-          >
-            Easily update your name, email and password.
-          </span>
-          {success ? (
-            <Alert
-              variant={"success"}
-              style={{
-                marginBottom: "0",
-                marginLeft: "1.8rem",
-                width: "22rem",
-              }}
-            >
-              {success}
-            </Alert>
-          ) : error ? (
-            <Alert
-              variant={"danger"}
-              style={{
-                marginBottom: "0",
-                marginLeft: "1.8rem",
-                width: "22rem",
-              }}
-            >
-              {error}
-            </Alert>
-          ) : (
-            ""
-          )}
+          <Row>
+            <Col>
+              <Card.Body
+                className="Login pb-0"
+                style={{
+                  paddingTop: "2rem",
 
-          <Card.Body className="Login pb-0" style={{ paddingTop: "1.5rem" }}>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group size="lg" controlId="name">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  autoFocus
-                  type="name"
-                  value={name}
-                  required
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group size="lg" controlId="email" className="mt-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  value={email}
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group size="lg" controlId="newPassword" className="mt-3">
-                <Form.Label>New Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={newPassword}
-                  placeholder="You can change your password"
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group size="lg" controlId="verifyPassword" className="mt-3">
-                <Form.Label>Confirm New Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={verifyPassword}
-                  required
-                  onChange={(e) => setVerifyPassword(e.target.value)}
-                />
-              </Form.Group>
-              <Card.Footer className="mt-3">
-                <Form.Group size="lg" controlId="password" className="mt-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    required
-                    placeholder="Currently used password"
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </Form.Group>
-              </Card.Footer>
-              <div className="d-grid gap-2">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  type="submit"
-                  style={{ marginTop: "1.5rem" }}
+                  marginRight: "25rem",
+                }}
+              >
+                <Container
+                  style={{ marginLeft: "7.65rem", marginBottom: "1rem" }}
                 >
-                  Update Profile
-                </Button>
-              </div>
-            </Form>
-          </Card.Body>
-          {/* <Card.Body>
-            {" "}
-            <span className="head mb-2 ">PROFILE</span>
-            <Table>
-              <th>
-                <tr>
-                  <th>ID</th>
-                  <th>DATE</th>
-                  <th>TOTAL</th>
-                  <th>PAID</th>
-                  <th>DELIVERED</th>
-                </tr>
-              </th>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order._id}>
-                    <td>{order._id}</td>
-                    <td>{order.dat}</td>
-                    <td>{order._id}</td>
-                    <td>{order._id}</td>
-                    <td>{order._id}</td>
-                    <td>{order._id}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Card.Body> */}
+                  <Card.Text
+                    style={{
+                      marginRight: "4rem",
+                      fontSize: "2.5rem",
+                      fontWeight: "bolder",
+                    }}
+                  >
+                    PROFILE
+                  </Card.Text>
+                  <span>Easily update your name, email and password.</span>
+
+                  {success ? (
+                    <Alert
+                      variant={"success"}
+                      style={{
+                        marginBottom: "0",
+
+                        width: "22rem",
+                      }}
+                    >
+                      {success}
+                    </Alert>
+                  ) : error ? (
+                    <Alert
+                      variant={"danger"}
+                      style={{
+                        marginBottom: "0",
+
+                        width: "22rem",
+                      }}
+                    >
+                      {error}
+                    </Alert>
+                  ) : (
+                    ""
+                  )}
+                </Container>
+                <Form onSubmit={handleSubmit} style={{ marginRight: "5rem" }}>
+                  <Form.Group size="lg" controlId="name">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                      autoFocus
+                      type="name"
+                      value={name}
+                      required
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group size="lg" controlId="email" className="mt-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                      type="email"
+                      value={email}
+                      required
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    size="lg"
+                    controlId="newPassword"
+                    className="mt-3"
+                  >
+                    <Form.Label>New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      value={newPassword}
+                      placeholder="You can change your password"
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    size="lg"
+                    controlId="verifyPassword"
+                    className="mt-3"
+                  >
+                    <Form.Label>Confirm New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      value={verifyPassword}
+                      required
+                      onChange={(e) => setVerifyPassword(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Card.Footer className="mt-3">
+                    <Form.Group size="lg" controlId="password" className="mt-3">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        value={password}
+                        required
+                        placeholder="Currently used password"
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Card.Footer>
+                  <div className="d-grid gap-2">
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      type="submit"
+                      style={{ marginTop: "1.5rem" }}
+                    >
+                      Update Profile
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Col>
+            <Col>
+              <Card.Body style={{ marginTop: "1rem", marginRight: "5rem" }}>
+                <Card.Text
+                  style={{
+                    marginRight: "4rem",
+                    fontSize: "2.5rem",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  MY ORDERS
+                </Card.Text>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>ORDER ID</th>
+                      <th>DATE</th>
+                      <th>TOTAL</th>
+                      <th>PAID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order._id}>
+                        <td>{order._id}</td>
+                        <td>{order.createdAt.substring(0, 10)}</td>
+                        <td>{order.totalPrice}₺</td>
+                        <td>{order.paidAt.substring(0, 10)}</td>
+                        <td>
+                          <LinkContainer to={`/myorders/${order._id}`}>
+                            <Button>Details</Button>
+                          </LinkContainer>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Col>
+          </Row>
         </Card>
       )}
     </>
