@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import guard from "../middlewareAuthorization.js";
+import { guard, isAdmin } from "../middlewareAuthorization.js";
 const router = express.Router();
 
 const produceToken = (id) => {
@@ -108,4 +108,49 @@ router.route("/profile").put(guard, async (req, res) => {
   });
 });
 
+router.route("/").get(guard, isAdmin, async (req, res) => {
+  //only Admin acc can see it.
+
+  const users = await User.find({});
+  res.json(users);
+});
+router.route("/:id").delete(guard, isAdmin, async (req, res) => {
+  //only Admin acc can delete it.
+
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    await user.remove();
+    res.send("User deleted.");
+  } else {
+    res.send("User not found.");
+  }
+});
+router.route("/:id").get(guard, isAdmin, async (req, res) => {
+  //only Admin acc can delete it.
+
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    res.send(user);
+  } else {
+    res.send("User not found.");
+  }
+});
+router.route("/:id").put(guard, isAdmin, async (req, res) => {
+  //only Admin acc can update it.
+  const user = await User.findById(req.params.id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin;
+  }
+  const updateUser = await user.save();
+  res.json({
+    _id: updateUser._id,
+    name: updateUser.name,
+    email: updateUser.email,
+    isAdmin: updateUser.isAdmin,
+  });
+});
 export default router;

@@ -154,8 +154,14 @@ const PaymentScreen = ({ cart, price }) => {
                             }}
                           >
                             <strong> {item.name} </strong>(
-                            {item.defaultCartStock} * {item.price}₺ ={" "}
-                            {(item.defaultCartStock * item.price).toFixed(2)}₺)
+                            {item.defaultCartStock > item.countInStock
+                              ? item.countInStock
+                              : item.defaultCartStock}{" "}
+                            * {item.price}₺ ={" "}
+                            {item.defaultCartStock > item.countInStock
+                              ? (item.price * item.countInStock).toFixed(2)
+                              : (item.price * item.defaultCartStock).toFixed(2)}
+                            ₺)
                           </Card.Text>
                         </Col>
                         <hr></hr>
@@ -217,13 +223,6 @@ const PaymentScreen = ({ cart, price }) => {
                           label="Credit Card"
                           name="paymentMethod"
                           value="CreditCard"
-                          onChange={(e) => setPaymentMethod(e.target.value)}
-                        ></Form.Check>
-                        <Form.Check
-                          type="radio"
-                          label="Cash"
-                          name="paymentMethod"
-                          value="Cash"
                           onChange={(e) => setPaymentMethod(e.target.value)}
                         ></Form.Check>
                       </FormGroup>

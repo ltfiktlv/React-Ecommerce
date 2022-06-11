@@ -24,6 +24,7 @@ const HomeScreen = ({ handleClick }) => {
           width: "21rem",
           backgroundColor: "#f8f1e7",
           borderRadius: "5px",
+          fontSize: "30px",
         }}
       >
         Latest Products

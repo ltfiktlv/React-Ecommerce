@@ -1,6 +1,6 @@
 import express from "express";
 import Order from "../models/orderModel.js";
-import guard from "../middlewareAuthorization.js";
+import { guard } from "../middlewareAuthorization.js";
 import Stripe from "stripe";
 const router = express.Router();
 
@@ -63,8 +63,7 @@ router.route("/:id").put(guard, async (req, res) => {
 });
 router.route("/myorders").get(guard, async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
-
-  res.json(orders);
+  res.send(orders);
 });
 router.route("/:id").get(guard, async (req, res) => {
   const orderDetail = await Order.findById(req.params.id);

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Header = ({ quantity, handleQty }) => {
   useEffect(() => {
     handleQty();
   });
   const [userName, setUserName] = useState({});
-
+  const navigate = useNavigate();
   useEffect(() => {
     const response = JSON.parse(localStorage.getItem("user"));
 
@@ -18,6 +18,7 @@ const Header = ({ quantity, handleQty }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("shippingAddress");
     localStorage.removeItem("paymentMethod");
+    navigate("/");
     window.location.reload();
   };
 
@@ -36,7 +37,7 @@ const Header = ({ quantity, handleQty }) => {
               to="/"
               style={{
                 letterSpacing: "0.1rem",
-                fontSize: "1.5rem",
+                fontSize: "2rem",
                 textDecoration: "none",
                 color: "white",
               }}
@@ -80,6 +81,21 @@ const Header = ({ quantity, handleQty }) => {
                   <LinkContainer to="/users/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
+
+                  {userName.isAdmin ? (
+                    <LinkContainer to="/admin/users">
+                      <NavDropdown.Item>User List</NavDropdown.Item>
+                    </LinkContainer>
+                  ) : (
+                    ""
+                  )}
+                  {userName.isAdmin ? (
+                    <LinkContainer to="/admin/products">
+                      <NavDropdown.Item>Product List</NavDropdown.Item>
+                    </LinkContainer>
+                  ) : (
+                    ""
+                  )}
                   <NavDropdown.Item onClick={handleLogout}>
                     Logout
                   </NavDropdown.Item>

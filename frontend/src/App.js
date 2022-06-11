@@ -13,6 +13,10 @@ import ShippingAddressScreen from "./screens/ShippingAddressScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import CheckOutScreen from "./screens/CheckOutScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
+import AdminShowUsers from "./screens/AdminShowUsers";
+import AdminEditUser from "./screens/AdminEditUser";
+import AdminShowProducts from "./screens/AdminShowProducts";
+import AdminEditProduct from "./screens/AdminEditProduct";
 const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || []; //calling back the data that we stored before.
 
 function App() {
@@ -31,12 +35,15 @@ function App() {
     if (exist) {
       setCart(
         cart.map((item) =>
-          item._id === products._id
+          item.defaultCartStock < item.countInStock
             ? {
                 ...exist,
                 defaultCartStock: exist.defaultCartStock + (qty || 1),
               }
-            : item
+            : {
+                ...exist,
+                defaultCartStock: exist.countInStock,
+              }
         )
       );
     } else setCart([...cart, { ...products, defaultCartStock: qty || 1 }]);
@@ -135,10 +142,12 @@ function App() {
         <Route path="/orders/:id" element={<CheckOutScreen />} />
         <Route
           path="/myorders/:id"
-          element={
-            <OrderDetailScreen cart={cart} price={price} quantity={sum} />
-          }
+          element={<OrderDetailScreen price={price} />}
         />
+        <Route path="/admin/users" element={<AdminShowUsers />} />
+        <Route path="/admin/user/edit/:id" element={<AdminEditUser />} />
+        <Route path="/admin/products" element={<AdminShowProducts />} />
+        <Route path="/admin/product/edit/:id" element={<AdminEditProduct />} />
       </Routes>
       <Footer />
     </Router>

@@ -95,7 +95,10 @@ const Cart = ({
             >
               <Card.Text style={{ marginTop: "1rem", paddingLeft: "5rem" }}>
                 <strong>
-                  {(item.price * item.defaultCartStock).toFixed(2)}₺
+                  {item.defaultCartStock > item.countInStock
+                    ? (item.price * item.countInStock).toFixed(2)
+                    : (item.price * item.defaultCartStock).toFixed(2)}
+                  ₺
                 </strong>
               </Card.Text>
               <Button

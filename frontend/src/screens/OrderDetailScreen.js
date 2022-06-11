@@ -20,13 +20,13 @@ const OrderDetailScreen = ({ price }) => {
       };
 
       const respond = await axios.get(`/api/myorders/${orderId.id}`, config);
+
       const holdData = respond.data;
-      console.log(holdData);
+
       setOrder(respond.data);
       holdData.map((order) =>
-        order._id === orderId.id ? setOrder(order) : console.log(order)
+        order._id === orderId.id ? setOrder(order) : ""
       );
-      console.log(`this is order fetch:${order}`);
     };
 
     fetchOrders();
@@ -34,13 +34,15 @@ const OrderDetailScreen = ({ price }) => {
 
   return (
     <>
-      {order._id ? (
+      {orderId.id ? (
         <Card
           style={{ width: "55%", height: "63vh" }}
           className="m-auto p-3 rounded"
         >
-          {!localStorage.getItem("user") && !order._id ? (
-            navigate("/users/login?redirect=address")
+          {!userInfo || !order._id ? (
+            <Card.Body>
+              <Card.Text>Error! You need to login first.</Card.Text>
+            </Card.Body>
           ) : (
             <Card.Body className="pb-0" style={{ paddingTop: "1rem" }}>
               <Row>
@@ -107,8 +109,15 @@ const OrderDetailScreen = ({ price }) => {
                               }}
                             >
                               <strong> {item.name} </strong>(
-                              {item.defaultCartStock} * {item.price}₺ ={" "}
-                              {(item.defaultCartStock * item.price).toFixed(2)}
+                              {item.defaultCartStock > item.countInStock
+                                ? item.countInStock
+                                : item.defaultCartStock}{" "}
+                              * {item.price}₺ ={" "}
+                              {item.defaultCartStock > item.countInStock
+                                ? (item.price * item.countInStock).toFixed(2)
+                                : (item.price * item.defaultCartStock).toFixed(
+                                    2
+                                  )}
                               ₺)
                             </Card.Text>
                           </Col>
