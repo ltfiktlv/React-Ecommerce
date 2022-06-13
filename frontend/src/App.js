@@ -11,12 +11,13 @@ import UserProfile from "./screens/UserProfile";
 import RegisterScreen from "./screens/RegisterScreen";
 import ShippingAddressScreen from "./screens/ShippingAddressScreen";
 import PaymentScreen from "./screens/PaymentScreen";
-import CheckOutScreen from "./screens/CheckOutScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
 import AdminShowUsers from "./screens/AdminShowUsers";
 import AdminEditUser from "./screens/AdminEditUser";
 import AdminShowProducts from "./screens/AdminShowProducts";
 import AdminEditProduct from "./screens/AdminEditProduct";
+import AdminCreateProduct from "./screens/AdminCreateProduct";
+import AdminShowOrders from "./screens/AdminShowOrders";
 const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart")) || []; //calling back the data that we stored before.
 
 function App() {
@@ -32,18 +33,17 @@ function App() {
     if (cart) {
       var exist = cart.find((item) => item._id === products._id);
     }
+
+    console.log(cart);
     if (exist) {
       setCart(
         cart.map((item) =>
-          item.defaultCartStock < item.countInStock
+          item._id === exist._id
             ? {
                 ...exist,
                 defaultCartStock: exist.defaultCartStock + (qty || 1),
               }
-            : {
-                ...exist,
-                defaultCartStock: exist.countInStock,
-              }
+            : item
         )
       );
     } else setCart([...cart, { ...products, defaultCartStock: qty || 1 }]);
@@ -68,8 +68,6 @@ function App() {
       basket[index].defaultCartStock += d;
       setCart([...basket]);
     }
-    console.log(`in stock : ${basket[index].countInStock}`);
-    console.log(`in cart stock: ${basket[index].defaultCartStock}`);
   };
   const handleRemove = (id) => {
     const arr = cart.filter((item) => item._id !== id);
@@ -138,16 +136,16 @@ function App() {
           path="/overview"
           element={<PaymentScreen cart={cart} price={price} quantity={sum} />}
         />
-
-        <Route path="/orders/:id" element={<CheckOutScreen />} />
         <Route
-          path="/myorders/:id"
+          path="/orders/:id"
           element={<OrderDetailScreen price={price} />}
         />
         <Route path="/admin/users" element={<AdminShowUsers />} />
         <Route path="/admin/user/edit/:id" element={<AdminEditUser />} />
         <Route path="/admin/products" element={<AdminShowProducts />} />
         <Route path="/admin/product/edit/:id" element={<AdminEditProduct />} />
+        <Route path="/admin/create-product" element={<AdminCreateProduct />} />
+        <Route path="/admin/orders" element={<AdminShowOrders />} />
       </Routes>
       <Footer />
     </Router>

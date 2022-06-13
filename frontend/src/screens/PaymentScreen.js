@@ -10,16 +10,24 @@ import {
   FormGroup,
   Row,
   Col,
+  Alert,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import StepChecker from "../components/StepChecker";
 
-const PaymentScreen = ({ cart, price }) => {
+import { useNavigate, useParams, Link } from "react-router-dom";
+import StepChecker from "../components/StepChecker";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement } from "@stripe/react-stripe-js";
+const stripePromise = loadStripe(`${process.env.STRIPE_PUBLISHABLE_KEY}`);
+
+const PaymentScreen = ({ price }) => {
+  const orderId = useParams();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const cart = JSON.parse(localStorage.getItem("cart"));
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("CreditCard");
   const [isSuccess, setIsSuccess] = useState("");
   const [order, setOrder] = useState("");
-
+  const [ordersId, setOrdersId] = useState("");
   const shippingPrice = 5;
   const totalPrice = Number(price) + shippingPrice;
   const shoppingCart = cart;
@@ -67,25 +75,64 @@ const PaymentScreen = ({ cart, price }) => {
         setOrder(data);
         const lastOrder = data.length - 1;
         let navigateAddress = data[lastOrder]._id;
-        navigate(`/orders/${navigateAddress}`);
+        setOrdersId(navigateAddress);
       };
       fetchOrder();
     } else {
       console.log(isSuccess);
     }
   }, [isSuccess]);
+  useEffect(() => {
+    ordersId ? console.log(ordersId) : console.log(ordersId);
+  }, [ordersId.id]);
+  const cardElementOptions = {
+    style: {
+      base: {
+        fontSize: "20px",
+
+        fontWeight: "500",
+        fontFamily: "Montserrat",
+        "::placeholder": {
+          color: "#87bbfd ",
+        },
+      },
+      invalid: {},
+    },
+    hidePostalCode: true,
+  };
+  const handleCheckOut = async (event) => {
+    event.preventDefault();
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    let data = {};
+    console.log(`id:${ordersId}`);
+    const { data: client_secret } = await axios.put(
+      `/api/orders/${ordersId}`,
+      data,
+      config
+    );
+
+    if (client_secret) {
+      setIsProcessing(true);
+    }
+  };
+
   return (
     <>
       <Container style={{ display: "flex", justifyContent: "center" }}>
         <ListGroup>
           <ListGroupItem>
-            <StepChecker signIn shippingAddress overview />
+            <StepChecker signIn shippingAddress payment />
           </ListGroupItem>
         </ListGroup>
       </Container>
 
       <Card
-        style={{ width: "55%", height: "63vh" }}
+        style={{ width: "55%", height: "90vh" }}
         className="m-auto p-3 rounded"
       >
         {!localStorage.getItem("user") ? (
@@ -229,13 +276,64 @@ const PaymentScreen = ({ cart, price }) => {
                     </Col>
                   </Row>
 
-                  <Button type="submit" style={{ marginLeft: "7rem" }}>
+                  <Button
+                    type="submit"
+                    style={{ marginLeft: "7rem" }}
+                    disabled={isSuccess === "success"}
+                  >
                     Continue
                   </Button>
                 </Form>
               </Col>
             </Row>
           </Card.Body>
+        )}
+
+        {isSuccess ? (
+          <div>
+            {!isProcessing === true ? (
+              <Card.Body>
+                <Alert variant={"danger"}>Not Paid</Alert>
+                <Form onSubmit={handleCheckOut}>
+                  <ListGroup>
+                    <ListGroupItem>
+                      <Card.Text>Order ID: {ordersId}</Card.Text>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      <Elements stripe={stripePromise}>
+                        <CardElement options={cardElementOptions} />
+                      </Elements>
+                    </ListGroupItem>
+                    <ListGroupItem
+                      style={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <Button type="submit">Pay</Button>
+                    </ListGroupItem>
+                  </ListGroup>
+                </Form>
+              </Card.Body>
+            ) : (
+              <Card.Body>
+                <Alert variant={"success"}>Order Confirmed</Alert>
+                <Form onSubmit={handleCheckOut}>
+                  <ListGroup>
+                    <ListGroupItem>
+                      <Card.Text>Order ID: {ordersId}</Card.Text>
+                    </ListGroupItem>
+                    <ListGroupItem
+                      style={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <Link to="/users/profile">
+                        <Button>Check My Orders</Button>
+                      </Link>
+                    </ListGroupItem>
+                  </ListGroup>
+                </Form>
+              </Card.Body>
+            )}
+          </div>
+        ) : (
+          <div> </div>
         )}
       </Card>
     </>

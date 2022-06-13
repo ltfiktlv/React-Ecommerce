@@ -18,6 +18,21 @@ const AdminEditProduct = () => {
   const fetchAdmin = JSON.parse(localStorage.getItem("user")) || [];
   const [product, setProduct] = useState([]);
   const productId = useParams();
+
+  const handleImageUpload = async (e) => {
+    const image = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image);
+    try {
+      const config = {
+        "Content-Type": "multipart/form-data",
+      };
+      const { data } = await axios.post("/api/upload", formData, config);
+      setImage(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     let config = {
       headers: {
@@ -165,12 +180,12 @@ const AdminEditProduct = () => {
                     onChange={(e) => setInStock(e.target.value)}
                   />
                 </Form.Group>
-                <Form.Group size="lg" controlId="image" className="mt-3">
+                <Form.Group size="lg" className="mt-3">
                   <Form.Label>Image</Form.Label>
                   <Form.Control
-                    value={image}
-                    required
-                    onChange={(e) => setImage(e.target.value)}
+                    type="file"
+                    label="Choose Image"
+                    onChange={handleImageUpload}
                   />
                 </Form.Group>
                 <Form.Group size="lg" controlId="description" className="mt-3">

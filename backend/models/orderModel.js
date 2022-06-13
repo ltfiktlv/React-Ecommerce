@@ -89,6 +89,9 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    deliveredAt: {
+      type: Date,
+    },
   },
   { timestamps: true } // created at when or updated when
 );

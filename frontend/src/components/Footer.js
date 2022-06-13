@@ -12,7 +12,7 @@ const Footer = () => {
             alignItems: "center",
           }}
         >
-          <Col className="footerbar">Copyright &copy; - SavorCoffee &reg;</Col>
+          <Col className="footerbar">Copyright &copy; - SavorBakery &reg;</Col>
         </Row>
       </Container>
     </footer>

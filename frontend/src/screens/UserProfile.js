@@ -91,7 +91,7 @@ export default function UserProfile() {
         .catch((error) => setError(error.respond.data));
 
       const newLocal = res.data;
-      console.log(res.data);
+
       localStorage.setItem("user", JSON.stringify(newLocal));
 
       setTimeout(() => {
@@ -254,6 +254,7 @@ export default function UserProfile() {
                         <th>ORDER ID</th>
                         <th>DATE</th>
                         <th>TOTAL</th>
+                        <th>PAID</th>
                         <th>DELIVERED</th>
                       </tr>
                     </thead>
@@ -268,6 +269,19 @@ export default function UserProfile() {
                           </td>
                           <td>{order.totalPrice}₺</td>
                           <td>
+                            {order.isPaid ? (
+                              <i
+                                class="fa-solid fa-check"
+                                style={{ color: "green", marginLeft: "2.2rem" }}
+                              />
+                            ) : (
+                              <i
+                                className="fas fa-times"
+                                style={{ color: "red", marginLeft: "2.2rem" }}
+                              />
+                            )}
+                          </td>
+                          <td>
                             {order.isDelivered ? (
                               <i
                                 class="fa-solid fa-check"
@@ -281,7 +295,7 @@ export default function UserProfile() {
                             )}
                           </td>
                           <td>
-                            <LinkContainer to={`/myorders/${order._id}`}>
+                            <LinkContainer to={`/orders/${order._id}`}>
                               <Button>Details</Button>
                             </LinkContainer>
                           </td>

@@ -42,7 +42,7 @@ const Header = ({ quantity, handleQty }) => {
                 color: "white",
               }}
             >
-              Savor Coffee <sup>&reg; </sup>
+              Savor Bakery <sup>&reg; </sup>
             </Link>
           </Navbar.Brand>
 
@@ -92,6 +92,13 @@ const Header = ({ quantity, handleQty }) => {
                   {userName.isAdmin ? (
                     <LinkContainer to="/admin/products">
                       <NavDropdown.Item>Product List</NavDropdown.Item>
+                    </LinkContainer>
+                  ) : (
+                    ""
+                  )}
+                  {userName.isAdmin ? (
+                    <LinkContainer to="/admin/orders">
+                      <NavDropdown.Item>Order List</NavDropdown.Item>
                     </LinkContainer>
                   ) : (
                     ""

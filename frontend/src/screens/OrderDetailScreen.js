@@ -19,14 +19,16 @@ const OrderDetailScreen = ({ price }) => {
         },
       };
 
-      const respond = await axios.get(`/api/myorders/${orderId.id}`, config);
-
-      const holdData = respond.data;
-
-      setOrder(respond.data);
-      holdData.map((order) =>
-        order._id === orderId.id ? setOrder(order) : ""
+      const { data } = await axios.get(
+        `http://localhost:3000/api/orders/${orderId.id} `,
+        config
       );
+
+      const holdData = data;
+      console.log(holdData);
+      setOrder(data);
+
+      holdData._id === orderId.id ? setOrder(holdData) : setOrder("");
     };
 
     fetchOrders();
@@ -34,12 +36,12 @@ const OrderDetailScreen = ({ price }) => {
 
   return (
     <>
-      {orderId.id ? (
+      {order._id ? (
         <Card
           style={{ width: "55%", height: "63vh" }}
           className="m-auto p-3 rounded"
         >
-          {!userInfo || !order._id ? (
+          {!order._id ? (
             <Card.Body>
               <Card.Text>Error! You need to login first.</Card.Text>
             </Card.Body>
@@ -61,7 +63,7 @@ const OrderDetailScreen = ({ price }) => {
                         Shipping Details
                       </Card.Text>
                       <hr></hr>
-                      <Card.Text>Name-Surname: {userInfo.name}</Card.Text>
+                      <Card.Text>Name: {order.user.name}</Card.Text>
                       <Card.Text>
                         Province/District: {order.shippingAddress.city}/
                         {order.shippingAddress.district}{" "}

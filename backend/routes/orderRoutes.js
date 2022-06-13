@@ -1,8 +1,14 @@
 import express from "express";
 import Order from "../models/orderModel.js";
-import { guard } from "../middlewareAuthorization.js";
+import { guard, isAdmin } from "../middlewareAuthorization.js";
 import Stripe from "stripe";
+
 const router = express.Router();
+router.route("/adminOrders").get(guard, isAdmin, async (req, res) => {
+  //admin get Orders
+  const orders = await Order.find({}).populate("user", "id name");
+  res.send(orders);
+});
 
 router.route("/").post(guard, async (req, res) => {
   const {
@@ -63,11 +69,28 @@ router.route("/:id").put(guard, async (req, res) => {
 });
 router.route("/myorders").get(guard, async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
+
   res.send(orders);
 });
 router.route("/:id").get(guard, async (req, res) => {
-  const orderDetail = await Order.findById(req.params.id);
+  const orderDetail = await Order.findById(req.params.id).populate(
+    "user",
+    "name id"
+  );
+
   res.json(orderDetail);
 });
 
+router.route("/deliver/:id").put(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (order.isPaid) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+    const deliverOrder = await order.save();
+    console.log(deliverOrder);
+    res.send(deliverOrder);
+  } else {
+    res.send("Not delivered");
+  }
+});
 export default router;
